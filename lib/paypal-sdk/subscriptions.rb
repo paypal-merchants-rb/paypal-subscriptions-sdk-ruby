@@ -11,6 +11,7 @@ module PayPal
       autoload :RequestDataType, "paypal-sdk/subscriptions/request_data_type"
 
       autoload :Product,   "paypal-sdk/subscriptions/product"
+      autoload :Products,  "paypal-sdk/subscriptions/product"
     end
   end
 end
