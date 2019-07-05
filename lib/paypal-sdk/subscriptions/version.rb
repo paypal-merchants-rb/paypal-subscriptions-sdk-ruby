@@ -1,5 +1,5 @@
-module Paypal
-  module Sdk
+module PayPal
+  module SDK
     module Subscriptions
       VERSION = "0.1.0"
     end

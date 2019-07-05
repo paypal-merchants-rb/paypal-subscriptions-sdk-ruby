@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "paypal/sdk/subscriptions"
+require "paypal-sdk/subscriptions"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
