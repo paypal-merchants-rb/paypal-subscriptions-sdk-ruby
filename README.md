@@ -14,13 +14,48 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
+## Configuration
 
-    $ gem install paypal-sdk-subscriptions
+Create a configuration file(`config/paypal.yml`):
 
-## Usage
+```yaml
+development: &default
+  mode: sandbox
+  client_id: EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM
+  client_secret: EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM
+test:
+  <<: *default
+production:
+  mode: live
+  client_id: CLIENT_ID
+  client_secret: CLIENT_SECRET
+```
 
-TODO: Write usage instructions here
+Load Configurations from specified file:
+
+```ruby
+PayPal::SDK::Core::Config.load('spec/config/paypal.yml',  ENV['RACK_ENV'] || 'development')
+```
+
+Without configuration file:
+
+```ruby
+PayPal::SDK.configure(
+  :mode => "sandbox", # "sandbox" or "live"
+  :client_id => "EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
+  :client_secret => "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM",
+  :ssl_options => { } )
+```
+
+Logger configuration:
+
+```ruby
+PayPal::SDK.logger = Logger.new(STDERR)
+
+# change log level to INFO
+PayPal::SDK.logger.level = Logger::INFO
+```
+**NOTE**: At `DEBUG` level, all requests/responses are logged except when `mode` is set to `live`. In order to disable request/response printing, set the log level to `INFO` or less verbose ones.
 
 ## Development
 
