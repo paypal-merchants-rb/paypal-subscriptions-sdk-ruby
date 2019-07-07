@@ -16,6 +16,12 @@ RSpec.describe PayPal::SDK::Subscriptions::Product do
     expect(product.id).to match(/\APROD-/)
   end
 
+  it "errors if product invalid" do
+    product = PayPal::SDK::Subscriptions::Product.new
+
+    expect { product.create! }.to raise_error(PayPal::SDK::Subscriptions::UnsuccessfulApiCall)
+  end
+
   it "lists products" do
     page = PayPal::SDK::Subscriptions::Products.list('page_size' => 99, 'total_required' => true)
 

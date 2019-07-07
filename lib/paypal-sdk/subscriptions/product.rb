@@ -19,6 +19,8 @@ module PayPal::SDK::Subscriptions
       self.merge!(response)
       success?
     end
+
+    raise_on_api_error :create
   end
 
   # https://developer.paypal.com/docs/api/catalog-products/v1/
