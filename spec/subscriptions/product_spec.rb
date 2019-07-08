@@ -10,20 +10,20 @@ RSpec.describe PayPal::SDK::Subscriptions::Product do
   }
 
   it "creates a product" do
-    product = PayPal::SDK::Subscriptions::Product.new(ProductAttributes)
+    product = described_class.new(ProductAttributes)
 
     expect(product.create).to be true
     expect(product.id).to match(/\APROD-/)
   end
 
   it "errors if product invalid" do
-    product = PayPal::SDK::Subscriptions::Product.new
+    product = described_class.new
 
     expect { product.create! }.to raise_error(PayPal::SDK::Subscriptions::UnsuccessfulApiCall)
   end
 
   it "lists products" do
-    page = PayPal::SDK::Subscriptions::Products.list('page_size' => 99, 'total_required' => true)
+    page = described_class.all('page_size' => 99, 'total_required' => true)
 
     expect(page.products.size).to be >= 0
     expect(page.total_items).to be >= 0
@@ -31,7 +31,7 @@ RSpec.describe PayPal::SDK::Subscriptions::Product do
   end
 
   it "paginates" do
-    page = PayPal::SDK::Subscriptions::Products.list('page_size' => 1, 'total_required' => true)
+    page = described_class.all('page_size' => 1, 'total_required' => true)
     page = page.next
 
     expect(page.products.size).to be >= 0

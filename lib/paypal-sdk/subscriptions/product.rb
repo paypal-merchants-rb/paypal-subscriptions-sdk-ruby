@@ -1,4 +1,5 @@
 module PayPal::SDK::Subscriptions
+  # https://developer.paypal.com/docs/api/catalog-products/v1/
   class Product < Base
     object_of :id, String # 6-50 chars. Default: system generated, prefixed with PROD-
     object_of :name, String
@@ -21,30 +22,30 @@ module PayPal::SDK::Subscriptions
     end
 
     raise_on_api_error :create
-  end
 
-  # https://developer.paypal.com/docs/api/catalog-products/v1/
-  class Products < Base
-    object_of :total_items, Integer
-    object_of :total_pages, Integer
-    array_of :products, Product
-    array_of :links, Links # self, next, last
+    class Page < Base
+      object_of :total_items, Integer
+      object_of :total_pages, Integer
+      array_of :products, Product
+      array_of :links, Links # self, next, last
 
-    include RequestDataType
+      include RequestDataType
 
-    # optional params include 'page', 'page_size', and 'total_required'
-    def self.list(params = {})
-      path = "v1/catalogs/products"
-      response = api.get(path, params)
-      new(response)
+      def next
+        link = links.detect { |l| l.rel == 'next' }
+        if link
+          uri = URI.parse(link.href)
+          response = api.api_call(method: :get, uri: uri, header: {})
+          self.class.new(response)
+        end
+      end
     end
 
-    def next
-      link = links.detect { |l| l.rel == 'next' }
-      if link
-        uri = URI.parse(link.href)
-        response = api.api_call(method: :get, uri: uri, header: {})
-        self.class.new(response)
+    class << self
+      # options include 'page', 'page_size', and 'total_required'
+      def all(options = {})
+        path = "v1/catalogs/products"
+        Page.new(api.get(path, options))
       end
     end
   end

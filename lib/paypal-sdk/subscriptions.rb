@@ -12,7 +12,6 @@ module PayPal
 
       autoload :BillingPlan, "paypal-sdk/subscriptions/billing_plan"
       autoload :Product,   "paypal-sdk/subscriptions/product"
-      autoload :Products,  "paypal-sdk/subscriptions/product"
       autoload :Subscription, "paypal-sdk/subscriptions/subscription"
     end
   end
