@@ -20,7 +20,16 @@ module PayPal::SDK::Subscriptions
       success?
     end
 
-    raise_on_api_error :create
+    # patch [Hash] { op: 'replace', path: , value: }
+    # path = [/description|/category|/image_url|/home_url]
+    def update(patch)
+      patch = Patch.new(patch) unless patch.is_a? Patch
+      response = api.patch(self.class.path(id), [patch.to_hash], http_header)
+      self.merge!(response)
+      success?
+    end
+
+    raise_on_api_error :create, :update
 
     class Page < Base
       object_of :total_items, Integer
