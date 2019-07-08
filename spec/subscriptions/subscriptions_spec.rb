@@ -108,7 +108,7 @@ RSpec.describe PayPal::SDK::Subscriptions do
     product = PayPal::SDK::Subscriptions::Product.new(ProductAttributes)
     expect(product.create).to be true
 
-    plan = PayPal::SDK::Subscriptions::BillingPlan.new(PlanAttributes)
+    plan = PayPal::SDK::Subscriptions::Plan.new(PlanAttributes)
     plan.product_id = product.id
     expect(plan.create).to be true
 

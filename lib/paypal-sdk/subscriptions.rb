@@ -10,7 +10,7 @@ module PayPal
       autoload :ErrorHash, "paypal-sdk/subscriptions/error_hash"
       autoload :RequestDataType, "paypal-sdk/subscriptions/request_data_type"
 
-      autoload :BillingPlan, "paypal-sdk/subscriptions/billing_plan"
+      autoload :Plan, "paypal-sdk/subscriptions/plan"
       autoload :Product,   "paypal-sdk/subscriptions/product"
       autoload :Subscription, "paypal-sdk/subscriptions/subscription"
     end

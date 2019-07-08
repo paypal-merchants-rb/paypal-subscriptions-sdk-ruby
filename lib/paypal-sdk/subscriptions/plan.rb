@@ -1,6 +1,6 @@
 module PayPal::SDK::Subscriptions
   # v1/billing/plans
-  class BillingPlan < Base
+  class Plan < Base
 
     class BillingCycle < Base
       class Frequency < Base
