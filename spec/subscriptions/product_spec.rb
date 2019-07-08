@@ -9,11 +9,15 @@ RSpec.describe PayPal::SDK::Subscriptions::Product do
     "home_url" => "https://example.com/home"
   }
 
-  it "creates a product" do
+  it "creates and finds product" do
     product = described_class.new(ProductAttributes)
 
     expect(product.create).to be true
     expect(product.id).to match(/\APROD-/)
+
+    found = described_class.find(product.id)
+
+    expect(found.id).to eq product.id
   end
 
   it "errors if product invalid" do

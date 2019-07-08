@@ -15,8 +15,7 @@ module PayPal::SDK::Subscriptions
     include RequestDataType
 
     def create
-      path = "v1/catalogs/products"
-      response = api.post(path, self.to_hash, http_header)
+      response = api.post(self.class.path, self.to_hash, http_header)
       self.merge!(response)
       success?
     end
@@ -42,9 +41,17 @@ module PayPal::SDK::Subscriptions
     end
 
     class << self
+      def path(resource_id = nil)
+        "v1/catalogs/products/#{resource_id}"
+      end
+
+      def find(resource_id)
+        raise ArgumentError.new("id required") if resource_id.to_s.strip.empty?
+        new(api.get(path resource_id))
+      end
+
       # options include 'page', 'page_size', and 'total_required'
       def all(options = {})
-        path = "v1/catalogs/products"
         Page.new(api.get(path, options))
       end
     end
