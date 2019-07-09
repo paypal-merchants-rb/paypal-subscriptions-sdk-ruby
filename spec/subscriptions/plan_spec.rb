@@ -37,11 +37,17 @@ RSpec.describe PayPal::SDK::Subscriptions::Plan do
     }
   end
 
-  it "creates a plan" do
+  it "creates, updates and finds a plan" do
     plan = described_class.new(plan_attributes)
 
     expect(plan.create).to be true
     expect(plan.id).to match(/\AP-/)
+
+    plan.update!(op: :replace, path: '/description', value: 'Updated plan')
+
+    found = described_class.find(plan.id)
+
+    expect(found.description).to eq 'Updated plan'
   end
 
   it "lists plans" do

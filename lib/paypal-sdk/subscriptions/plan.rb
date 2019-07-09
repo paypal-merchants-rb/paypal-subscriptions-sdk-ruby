@@ -9,7 +9,9 @@ module PayPal::SDK::Subscriptions
       end
 
       class PricingScheme < Base
+        object_of :version, Integer
         object_of :fixed_price, Money
+        object_of :create_time, DateTime
       end
 
       object_of :frequency, Frequency
@@ -41,6 +43,18 @@ module PayPal::SDK::Subscriptions
       success?
     end
 
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch
+    # patch [Hash] { op: 'replace', path: , value: }
+    # path = [description|payment_preferences.auto_bill_outstanding|taxes.percentage|payment_preferences.payment_failure_threshold]
+    def update(patch)
+      patch = Patch.new(patch) unless patch.is_a? Patch
+      response = api.patch(self.class.path(id), [patch.to_hash], http_header)
+      self.merge!(response)
+      success?
+    end
+
+    raise_on_api_error :create, :update
+
     class Page < Base
       object_of :total_items, Integer
       object_of :total_pages, Integer
@@ -64,6 +78,11 @@ module PayPal::SDK::Subscriptions
         "v1/billing/plans/#{resource_id}"
       end
 
+      def find(resource_id)
+        raise ArgumentError.new("id required") if resource_id.to_s.strip.empty?
+        new(api.get(path resource_id))
+      end
+
       # options include 'page', 'page_size', and 'total_required'
       def all(options = {})
         Page.new(api.get(path, options))
@@ -79,6 +98,8 @@ module PayPal::SDK::Subscriptions
     object_of :payment_preferences, PaymentPreferences
     object_of :quantity_supported, Boolean
     object_of :taxes, Taxes
+    object_of :create_time, String
+    object_of :update_time, String
     array_of  :links, Links
   end
 end
