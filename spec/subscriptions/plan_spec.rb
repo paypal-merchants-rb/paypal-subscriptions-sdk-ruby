@@ -43,4 +43,17 @@ RSpec.describe PayPal::SDK::Subscriptions::Plan do
     expect(plan.create).to be true
     expect(plan.id).to match(/\AP-/)
   end
+
+  it "lists plans" do
+    page = described_class.all('page_size' => 1)
+
+    expect(page.plans.size).to eq 1
+  end
+
+  it "paginates" do
+    page = described_class.all('page_size' => 1)
+    page = page.next
+
+    expect(page.plans.size).to eq 1
+  end
 end

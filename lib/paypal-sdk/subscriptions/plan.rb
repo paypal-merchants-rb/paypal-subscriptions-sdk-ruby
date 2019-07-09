@@ -36,10 +36,38 @@ module PayPal::SDK::Subscriptions
     include RequestDataType
 
     def create
-      path = "v1/billing/plans/"
-      response = api.post(path, self.to_hash, http_header)
+      response = api.post(self.class.path, self.to_hash, http_header)
       self.merge!(response)
       success?
+    end
+
+    class Page < Base
+      object_of :total_items, Integer
+      object_of :total_pages, Integer
+      array_of :plans, Plan
+      array_of :links, Links # self, next, last
+
+      include RequestDataType
+
+      def next
+        link = links.detect { |l| l.rel == 'next' }
+        if link
+          uri = URI.parse(link.href)
+          response = api.api_call(method: :get, uri: uri, header: {})
+          self.class.new(response)
+        end
+      end
+    end
+
+    class << self
+      def path(resource_id = nil)
+        "v1/billing/plans/#{resource_id}"
+      end
+
+      # options include 'page', 'page_size', and 'total_required'
+      def all(options = {})
+        Page.new(api.get(path, options))
+      end
     end
 
     object_of :product_id, String
