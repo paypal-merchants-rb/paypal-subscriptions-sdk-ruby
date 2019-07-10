@@ -53,12 +53,6 @@ module PayPal::SDK::Subscriptions
     end
   end
 
-  class Links < Base
-    object_of :href, String
-    object_of :rel, String
-    object_of :method, String
-  end
-
   class Money < Base
     object_of :currency_code, String
     object_of :value, String

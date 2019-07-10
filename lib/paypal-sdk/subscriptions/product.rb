@@ -10,7 +10,7 @@ module PayPal::SDK::Subscriptions
     object_of :home_url, String
     object_of :create_time, String
     object_of :update_time, String
-    array_of  :links, Links
+    array_of  :links, Link
 
     include RequestDataType
 
@@ -35,7 +35,7 @@ module PayPal::SDK::Subscriptions
       object_of :total_items, Integer
       object_of :total_pages, Integer
       array_of :products, Product
-      array_of :links, Links # self, next, last
+      array_of :links, Link # self, next, last
 
       include RequestDataType
 

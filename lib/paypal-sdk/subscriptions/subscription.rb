@@ -67,6 +67,6 @@ module PayPal::SDK::Subscriptions
     object_of :auto_renewal, Boolean
     object_of :application_context, ApplicationContext
     object_of :create_time, DateTime
-    array_of  :links, Links
+    array_of  :links, Link
   end
 end
