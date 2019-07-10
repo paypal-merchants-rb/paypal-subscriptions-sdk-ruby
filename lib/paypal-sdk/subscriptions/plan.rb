@@ -53,6 +53,20 @@ module PayPal::SDK::Subscriptions
       success?
     end
 
+    def activate
+      path = "#{self.class.path(id)}/activate"
+      merge! api.post(path, {}, http_header)
+      success?
+    end
+    raise_on_api_error :activate
+
+    def deactivate
+      path = "#{self.class.path(id)}/deactivate"
+      merge! api.post(path, {}, http_header)
+      success?
+    end
+    raise_on_api_error :deactivate
+
     raise_on_api_error :create, :update
 
     class Page < Base
@@ -89,11 +103,16 @@ module PayPal::SDK::Subscriptions
       end
     end
 
+    def reload
+      merge! api.get(self.class.path id)
+      success?
+    end
+
     object_of :product_id, String
     object_of :id, String
     object_of :name, String
     object_of :description, String
-    object_of :status, String
+    object_of :status, String # CREATED|ACTIVE|INACTIVE
     array_of  :billing_cycles, BillingCycle
     object_of :payment_preferences, PaymentPreferences
     object_of :quantity_supported, Boolean
