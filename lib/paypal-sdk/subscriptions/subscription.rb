@@ -2,11 +2,8 @@ module PayPal::SDK::Subscriptions
   # https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions
   class Subscription < RequestBase
 
-    def create()
-      path = "v1/billing/subscriptions/"
-      response = api.post(path, self.to_hash, http_header)
-      self.merge!(response)
-      success?
+    def self.path(resource_id = nil)
+      "v1/billing/subscriptions/#{resource_id}"
     end
 
     class Subscriber < Base

@@ -11,7 +11,7 @@ module PayPal::SDK::Subscriptions
     end
   end
 
-  class RequestBase < PayPal::SDK::Core::API::DataTypes::Base
+  class RequestAPIBase < PayPal::SDK::Core::API::DataTypes::Base
     include RequestDataType
 
     attr_accessor :error
@@ -49,5 +49,40 @@ module PayPal::SDK::Subscriptions
         }
       end
     end
+  end
+
+  class Patch < Base
+    object_of :op, String
+    object_of :path, String
+    object_of :value, Object
+    object_of :from, String
+  end
+
+  class RequestBase < RequestAPIBase
+    def path(id = nil)
+      self.class.path(id)
+    end
+
+    def commit(path, data = {}, method = :post)
+      merge! api.send(method, path, data, http_header)
+      success?
+    end
+
+    def create
+      commit(path, to_hash)
+    end
+    raise_on_api_error :create
+
+    def self.find(resource_id)
+      raise ArgumentError.new("id required") if resource_id.to_s.strip.empty?
+      new api.get(path resource_id)
+    end
+
+    # patch [Hash] { op: 'replace', path: , value: }
+    def update(patch)
+      patch = Patch.new(patch) unless patch.is_a? Patch
+      commit(path(id), [patch.to_hash], :patch)
+    end
+    raise_on_api_error :update
   end
 end

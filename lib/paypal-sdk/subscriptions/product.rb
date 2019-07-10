@@ -12,22 +12,11 @@ module PayPal::SDK::Subscriptions
     object_of :update_time, String
     array_of  :links, Link
 
-    def create
-      response = api.post(self.class.path, self.to_hash, http_header)
-      self.merge!(response)
-      success?
-    end
-
     # patch [Hash] { op: 'replace', path: , value: }
     # path = [/description|/category|/image_url|/home_url]
     def update(patch)
-      patch = Patch.new(patch) unless patch.is_a? Patch
-      response = api.patch(self.class.path(id), [patch.to_hash], http_header)
-      self.merge!(response)
-      success?
+      super
     end
-
-    raise_on_api_error :create, :update
 
     class Page < RequestBase
       object_of :total_items, Integer
@@ -48,11 +37,6 @@ module PayPal::SDK::Subscriptions
     class << self
       def path(resource_id = nil)
         "v1/catalogs/products/#{resource_id}"
-      end
-
-      def find(resource_id)
-        raise ArgumentError.new("id required") if resource_id.to_s.strip.empty?
-        new(api.get(path resource_id))
       end
 
       # options include 'page', 'page_size', and 'total_required'

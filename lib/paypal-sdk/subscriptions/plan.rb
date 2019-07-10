@@ -35,41 +35,26 @@ module PayPal::SDK::Subscriptions
       object_of :inclusive, Boolean
     end
 
-    def create
-      response = api.post(self.class.path, self.to_hash, http_header)
-      self.merge!(response)
-      success?
-    end
-
     # https://developer.paypal.com/docs/api/subscriptions/v1/#plans_patch
     # patch [Hash] { op: 'replace', path: , value: }
     # path = [description|payment_preferences.auto_bill_outstanding|taxes.percentage|payment_preferences.payment_failure_threshold]
     def update(patch)
-      patch = Patch.new(patch) unless patch.is_a? Patch
-      response = api.patch(self.class.path(id), [patch.to_hash], http_header)
-      self.merge!(response)
-      success?
+      super
     end
 
     def update_pricing(*schemes)
-      path = "#{self.class.path(id)}/update-pricing-schemes"
       payload = { pricing_schemes: schemes.map(&:to_hash) }
-      merge! api.post(path, payload, http_header)
-      success?
+      commit("#{path(id)}/update-pricing-schemes", payload)
     end
     raise_on_api_error :update_pricing
 
     def activate
-      path = "#{self.class.path(id)}/activate"
-      merge! api.post(path, {}, http_header)
-      success?
+      commit("#{path(id)}/activate")
     end
     raise_on_api_error :activate
 
     def deactivate
-      path = "#{self.class.path(id)}/deactivate"
-      merge! api.post(path, {}, http_header)
-      success?
+      commit("#{path(id)}/deactivate")
     end
     raise_on_api_error :deactivate
 
@@ -94,11 +79,6 @@ module PayPal::SDK::Subscriptions
     class << self
       def path(resource_id = nil)
         "v1/billing/plans/#{resource_id}"
-      end
-
-      def find(resource_id)
-        raise ArgumentError.new("id required") if resource_id.to_s.strip.empty?
-        new(api.get(path resource_id))
       end
 
       # options include 'page', 'page_size', and 'total_required'
