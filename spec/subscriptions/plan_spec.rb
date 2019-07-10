@@ -45,11 +45,14 @@ RSpec.describe PayPal::SDK::Subscriptions::Plan do
     expect(plan.status).to eq 'ACTIVE'
 
     plan.update!(op: :replace, path: '/description', value: 'Updated plan')
+    new_price = { currency_code: 'USD', value: '10.99' }
+    plan.update_pricing!(billing_cycle_sequence: 2, pricing_scheme: { fixed_price: new_price })
     plan.deactivate!
 
     found = described_class.find(plan.id)
 
     expect(found.description).to eq 'Updated plan'
+    expect(found.billing_cycles[1].pricing_scheme.fixed_price.value).to eq '10.99'
     expect(found.status).to eq 'INACTIVE'
 
     found.activate!

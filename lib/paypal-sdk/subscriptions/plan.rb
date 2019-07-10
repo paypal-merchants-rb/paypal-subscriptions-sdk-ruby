@@ -53,6 +53,14 @@ module PayPal::SDK::Subscriptions
       success?
     end
 
+    def update_pricing(*schemes)
+      path = "#{self.class.path(id)}/update-pricing-schemes"
+      payload = { pricing_schemes: schemes.map(&:to_hash) }
+      merge! api.post(path, payload, http_header)
+      success?
+    end
+    raise_on_api_error :update_pricing
+
     def activate
       path = "#{self.class.path(id)}/activate"
       merge! api.post(path, {}, http_header)
