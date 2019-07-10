@@ -1,7 +1,6 @@
 module PayPal::SDK::Subscriptions
   # https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions
-  class Subscription < Base
-    include RequestDataType
+  class Subscription < RequestBase
 
     def create()
       path = "v1/billing/subscriptions/"

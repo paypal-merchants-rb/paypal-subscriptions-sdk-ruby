@@ -9,6 +9,7 @@ module PayPal
       autoload :Base,      "paypal-sdk/subscriptions/data_types"
       autoload :ErrorHash, "paypal-sdk/subscriptions/error_hash"
       autoload :Link,      "paypal-sdk/subscriptions/link"
+      autoload :RequestBase, "paypal-sdk/subscriptions/request_base"
       autoload :RequestDataType, "paypal-sdk/subscriptions/request_data_type"
 
       autoload :Plan, "paypal-sdk/subscriptions/plan"

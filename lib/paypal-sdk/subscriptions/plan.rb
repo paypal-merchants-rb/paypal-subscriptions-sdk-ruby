@@ -1,6 +1,6 @@
 module PayPal::SDK::Subscriptions
   # v1/billing/plans
-  class Plan < Base
+  class Plan < RequestBase
 
     class BillingCycle < Base
       class Frequency < Base
@@ -34,8 +34,6 @@ module PayPal::SDK::Subscriptions
       object_of :percentage, Number
       object_of :inclusive, Boolean
     end
-
-    include RequestDataType
 
     def create
       response = api.post(self.class.path, self.to_hash, http_header)
@@ -77,13 +75,11 @@ module PayPal::SDK::Subscriptions
 
     raise_on_api_error :create, :update
 
-    class Page < Base
+    class Page < RequestBase
       object_of :total_items, Integer
       object_of :total_pages, Integer
       array_of :plans, Plan
       array_of :links, Link # self, next, last
-
-      include RequestDataType
 
       def next
         link = links.detect { |l| l.rel == 'next' }
