@@ -89,5 +89,15 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
 
     expect(subscription.id).to match(/\AI-/)
     expect(subscription.status).to eq 'APPROVAL_PENDING'
+
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions_patch example invalid
+    # new_balance = { currency_code: 'USD', value: '10.99' }
+    # subscription.update!(op: :replace, path: '/billing_info/outstanding_balance', value: new_balance)
+
+    # Can't test without approval
+    expect { subscription.activate! }.to raise_error(PayPal::SDK::Core::Exceptions::ResourceInvalid)
+    # expect(subscription.status).to eq 'ACTIVE'
+    expect { subscription.cancel! }.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
+    # expect(subscription.status).to eq 'CANCELED'
   end
 end

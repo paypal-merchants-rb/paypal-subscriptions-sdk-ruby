@@ -55,7 +55,7 @@ module PayPal::SDK::Subscriptions
     object_of :plan_id, String
     object_of :id, String
     object_of :start_time, DateTime # default: Time.now
-    object_of :status, String
+    object_of :status, String # APPROVAL_PENDING|APPROVED|ACTIVE|SUSPENDED|CANCELLED|EXPIRED
     object_of :status_update_time, DateTime
     object_of :quantity, Integer
     object_of :shipping_amount, Money
@@ -64,5 +64,15 @@ module PayPal::SDK::Subscriptions
     object_of :application_context, ApplicationContext
     object_of :create_time, DateTime
     array_of  :links, Link
+
+    def activate
+      commit("#{path(id)}/activate")
+    end
+    raise_on_api_error :activate
+
+    def cancel
+      commit("#{path(id)}/cancel")
+    end
+    raise_on_api_error :cancel
   end
 end
