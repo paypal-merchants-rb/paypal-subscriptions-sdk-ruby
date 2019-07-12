@@ -102,6 +102,10 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
       subscription.capture!('Charging as the balance reached the limit', value: '10.99', currency_code: 'USD')
     end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
 
+    expect do
+      subscription.suspend!('Item out of stock')
+    end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
+
     expect { subscription.cancel! }.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
     # expect(subscription.status).to eq 'CANCELED'
   end

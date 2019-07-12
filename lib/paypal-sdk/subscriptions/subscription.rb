@@ -81,5 +81,10 @@ module PayPal::SDK::Subscriptions
       api.post("#{path(id)}/capture", payload, http_header)
     end
     raise_on_api_error :capture
+
+    def suspend(note)
+      commit("#{path(id)}/suspend", reason: note)
+    end
+    raise_on_api_error :suspend
   end
 end
