@@ -1,6 +1,14 @@
 require 'securerandom'
 
+module PayPal::SDK::Core::Exceptions
+  # 422 Unprocessable Entity
+  class ResourceInvalid < ClientError # :nodoc:
+  end
+end
+
 module PayPal::SDK::Subscriptions
+  include PayPal::SDK::Core::Exceptions
+
   # API error: returned as 200 + "error" key in response.
   class UnsuccessfulApiCall < RuntimeError
     attr_reader :api_error
