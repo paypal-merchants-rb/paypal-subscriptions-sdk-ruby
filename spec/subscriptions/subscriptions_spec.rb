@@ -97,6 +97,11 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
     # Can't test without approval
     expect { subscription.activate! }.to raise_error(PayPal::SDK::Core::Exceptions::ResourceInvalid)
     # expect(subscription.status).to eq 'ACTIVE'
+
+    expect do
+      subscription.capture!('Charging as the balance reached the limit', value: '10.99', currency_code: 'USD')
+    end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
+
     expect { subscription.cancel! }.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
     # expect(subscription.status).to eq 'CANCELED'
   end
