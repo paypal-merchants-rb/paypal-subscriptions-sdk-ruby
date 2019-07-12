@@ -37,7 +37,7 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
       "taxes" => { "percentage" => "10", "inclusive" => false }
     }
   end
-  let(:plan) { PayPal::SDK::Subscriptions::Plan.new(plan_attributes).tap(&:create!) }
+  let(:plan) { PayPal::SDK::Subscriptions::Plan.create!(plan_attributes) }
 
   let(:subscription_attributes) do
   {
@@ -85,8 +85,7 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
   end
 
   it "creates a subscription" do
-    subscription = described_class.new(subscription_attributes)
-    subscription.create!
+    subscription = described_class.create!(subscription_attributes)
 
     expect(subscription.id).to match(/\AI-/)
     expect(subscription.status).to eq 'APPROVAL_PENDING'

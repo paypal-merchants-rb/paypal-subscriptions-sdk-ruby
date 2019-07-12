@@ -76,6 +76,10 @@ module PayPal::SDK::Subscriptions
       success?
     end
 
+    def self.create!(attrs)
+      new(attrs).tap(&:create!)
+    end
+
     def create
       commit(path, to_hash)
     end
