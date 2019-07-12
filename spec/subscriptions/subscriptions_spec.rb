@@ -1,69 +1,48 @@
 require 'date'
 
-RSpec.describe PayPal::SDK::Subscriptions do
-  it "has a version number" do
-    expect(PayPal::SDK::Subscriptions::VERSION).not_to be nil
-  end
+RSpec.describe PayPal::SDK::Subscriptions::Subscription do
+  let(:product) { PayPal::SDK::Subscriptions::Product.all(page_size: 1).products.first || raise('no products!') }
 
-  ProductAttributes = {
-    "name" => "Video Streaming Service",
-    "description" => "Video streaming service",
-    "type" => "SERVICE",
-    "category" => "SOFTWARE",
-    "image_url" => "https://example.com/streaming.jpg",
-    "home_url" => "https://example.com/home"
-  }
-
-  PlanAttributes = {
-    "product_id" => "PROD-XXCD1234QWER65782",
-    "name" => "Basic Plan",
-    "description" => "Basic plan",
-    "billing_cycles" => [
-      {
-        "frequency" => {
-          "interval_unit" => "MONTH",
-          "interval_count" => 1
+  let(:plan_attributes) do
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#plans_get
+    {
+      "product_id" => product.id,
+      "name" => "Basic Plan",
+      "description" => "Basic plan",
+      "billing_cycles" => [
+        {
+          "frequency" => { "interval_unit" => "MONTH", "interval_count" => 1 },
+          "tenure_type" => "TRIAL",
+          "sequence" => 1,
+          "total_cycles" => 1
         },
-        "tenure_type" => "TRIAL",
-        "sequence" => 1,
-        "total_cycles" => 1
-      },
-      {
-        "frequency" => {
-          "interval_unit" => "MONTH",
-          "interval_count" => 1
-        },
-        "tenure_type" => "REGULAR",
-        "sequence" => 2,
-        "total_cycles" => 12,
-        "pricing_scheme" => {
-          "fixed_price" => {
-            "value" => "10",
-            "currency_code" => "USD"
+        {
+          "frequency" => { "interval_unit" => "MONTH", "interval_count" => 1 },
+          "tenure_type" => "REGULAR",
+          "sequence" => 2,
+          "total_cycles" => 12,
+          "pricing_scheme" => {
+            "fixed_price" => { "value" => "10", "currency_code" => "USD" }
           }
         }
-      }
-    ],
-    "payment_preferences" => {
-      "service_type" => "PREPAID",
-      "auto_bill_outstanding" => true,
-      "setup_fee" => {
-        "value" => "10",
-        "currency_code" => "USD"
+      ],
+      "payment_preferences" => {
+        "service_type" => "PREPAID",
+        "auto_bill_outstanding" => true,
+        "setup_fee" => { "value" => "10", "currency_code" => "USD" },
+        "setup_fee_failure_action" => "CONTINUE",
+        "payment_failure_threshold" => 3
       },
-      "setup_fee_failure_action" => "CONTINUE",
-      "payment_failure_threshold" => 3
-    },
-    "quantity_supported" => true,
-    "taxes" => {
-      "percentage" => "10",
-      "inclusive" => false
+      "quantity_supported" => true,
+      "taxes" => { "percentage" => "10", "inclusive" => false }
     }
-  }
+  end
+  let(:plan) { PayPal::SDK::Subscriptions::Plan.new(plan_attributes).tap(&:create!) }
 
-  SubscriptionAttributes = {
-    "plan_id" => "P-4ML8771254154362WXNWU5BC",
-    "start_time" => (Date.today + 1).strftime('%FT%TZ'), # eg. "2018-11-01T00:00:00Z",
+  let(:subscription_attributes) do
+  {
+    "plan_id" => plan.id,
+    "start_time" => (Date.today + 1),
     "quantity" => "20",
     "shipping_amount" => {
       "currency_code" => "USD",
@@ -103,18 +82,13 @@ RSpec.describe PayPal::SDK::Subscriptions do
       "cancel_url" => "https://example.com/cancelUrl"
     }
   }
+  end
 
-  it "creates a product, plan and subscription" do
-    product = PayPal::SDK::Subscriptions::Product.new(ProductAttributes)
-    expect(product.create).to be true
+  it "creates a subscription" do
+    subscription = described_class.new(subscription_attributes)
+    subscription.create!
 
-    plan = PayPal::SDK::Subscriptions::Plan.new(PlanAttributes)
-    plan.product_id = product.id
-    expect(plan.create).to be true
-
-    subscription = PayPal::SDK::Subscriptions::Subscription.new(SubscriptionAttributes)
-    subscription.plan_id = plan.id
-    expect(subscription.create).to be true
     expect(subscription.id).to match(/\AI-/)
+    expect(subscription.status).to eq 'APPROVAL_PENDING'
   end
 end
