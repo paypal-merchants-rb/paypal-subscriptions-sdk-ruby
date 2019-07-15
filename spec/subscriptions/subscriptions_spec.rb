@@ -103,6 +103,10 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
     end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
 
     expect do
+      subscription.transactions(start_time: '2019-01-01')
+    end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
+
+    expect do
       subscription.suspend!('Item out of stock')
     end.to raise_error(PayPal::SDK::Core::Exceptions::ResourceNotFound)
 

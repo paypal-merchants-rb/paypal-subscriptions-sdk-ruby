@@ -86,5 +86,40 @@ module PayPal::SDK::Subscriptions
       commit("#{path(id)}/suspend", reason: note)
     end
     raise_on_api_error :suspend
+
+    class Transaction < RequestBase
+      class TransactionStatus < EnumType
+        self.options = %w(COMPLETED DECLINED PARTIALLY_REFUNDED PENDING REFUNDED)
+      end
+      object_of :status, TransactionStatus
+      object_of :id, String
+      object_of :amount_with_breakdown, Hash
+      object_of :payer_name, Hash
+      object_of :payer_email, String
+      object_of :time, DateTime
+
+      class Page < RequestBase
+        array_of :transactions, Transaction
+        object_of :total_items, Integer
+        object_of :total_pages, Integer
+        array_of :links, Link # self, next, last
+      end
+    end
+
+    # option :start_time [Time|String] (required)
+    # option :end_time [Time|String] (default: now)
+    def transactions(options = {})
+      options[:end_time] ||= Time.now
+
+      start_time = DateTime.parse(options[:start_time].to_s).strftime('%Y-%m-%dT%H:%M:%S.%L%:z')
+      end_time = DateTime.parse(options[:end_time].to_s).strftime('%Y-%m-%dT%H:%M:%S.%L%:z')
+
+      response = api.get("#{path(id)}/transactions", start_time: start_time, end_time: end_time)
+
+      page = Transaction::Page.new(response)
+      page.merge!(response)
+      page.raise_error!
+      page
+    end
   end
 end

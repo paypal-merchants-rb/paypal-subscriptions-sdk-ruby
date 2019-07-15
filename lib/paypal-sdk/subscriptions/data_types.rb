@@ -5,6 +5,9 @@ module PayPal::SDK::Subscriptions
     end
   end
 
+  class EnumType < PayPal::SDK::Core::API::DataTypes::Enum
+  end
+
   class Money < Base
     object_of :currency_code, String
     object_of :value, String
