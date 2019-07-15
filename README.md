@@ -1,5 +1,8 @@
 # PayPal REST SDK for Subscriptions Management
 
+[![Version         ][rubygems_badge]][rubygems]
+[![Travis CI       ][travis_badge]][travis]
+
 Missing PayPal REST SDK for [Subscriptions Management][subscriptions_full_integration] [released April 2019][release_notes].
 
 ## Installation
@@ -21,8 +24,8 @@ Create a configuration file(`config/paypal.yml`):
 ```yaml
 development: &default
   mode: sandbox
-  client_id: EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM
-  client_secret: EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM
+  client_id: <%= ENV.fetch('client_id') %>
+  client_secret: <%= ENV.fetch('client_secret') %>
 test:
   <<: *default
 production:
@@ -42,8 +45,8 @@ Without configuration file:
 ```ruby
 PayPal::SDK.configure(
   :mode => "sandbox", # "sandbox" or "live"
-  :client_id => "EBWKjlELKMYqRNQ6sYvFo64FtaRLRR5BdHEESmha49TM",
-  :client_secret => "EO422dn3gQLgDbuwqTjzrFgFtaRLRR5BdHEESmha49TM",
+  :client_id => ENV.fetch('client_id'),
+  :client_secret => ENV.fetch('client_secret'),
   :ssl_options => { } )
 ```
 
@@ -59,17 +62,22 @@ PayPal::SDK.logger.level = Logger::INFO
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+The test suite runs transactions against the PayPal sandbox, creating products and plans that it cannot delete.  Initial tests may fail until at least one product and plan has been created.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/paypal-sdk-subscriptions.
+Bug reports and pull requests are welcome on GitHub at https://github.com/varyonic]/paypal-sdk-subscriptions.
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+
+[rubygems_badge]: http://img.shields.io/gem/v/paypal-subscriptions-sdk-ruby.svg
+[rubygems]: https://rubygems.org/gems/paypal-subscriptions-sdk-ruby
+[travis_badge]: http://img.shields.io/travis/varyonic/paypal-subscriptions-sdk-ruby/master.svg
+[travis]: https://travis-ci.org/varyonic/paypal-subscriptions-sdk-ruby
 
 [release_notes]: https://developer.paypal.com/docs/release-notes/release-notes-2019/#april
 [subscriptions_full_integration]: https://developer.paypal.com/docs/subscriptions/full-integration/subscription-management/
