@@ -75,10 +75,16 @@ module PayPal::SDK::Subscriptions
     end
     raise_on_api_error :cancel
 
-    # @return [Hash] Transaction info
+    # @return [Transaction] Transaction info
     def capture(note, amount)
       payload = { amount: amount, note: note, capture_type: 'OUTSTANDING_BALANCE' }
-      api.post("#{path(id)}/capture", payload, http_header)
+
+      response = api.post("#{path(id)}/capture", payload, http_header)
+
+      transaction = Transaction.new(response)
+      transaction.merge!(response)
+      transaction.raise_error!
+      transaction
     end
     raise_on_api_error :capture
 
