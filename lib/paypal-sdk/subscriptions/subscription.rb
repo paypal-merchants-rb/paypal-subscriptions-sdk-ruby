@@ -116,7 +116,7 @@ module PayPal::SDK::Subscriptions
     # option :end_time [Time|String] (default: now)
     def transactions(options = {})
       options[:start_time] ||= create_time
-      options[:end_time] ||= Time.now
+      options[:end_time] ||= Time.now.utc
 
       start_time = DateTime.parse(options[:start_time].to_s).strftime('%Y-%m-%dT%H:%M:%S.%L%:z')
       end_time = DateTime.parse(options[:end_time].to_s).strftime('%Y-%m-%dT%H:%M:%S.%L%:z')
