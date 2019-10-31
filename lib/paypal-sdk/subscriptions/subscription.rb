@@ -1,5 +1,6 @@
 module PayPal::SDK::Subscriptions
   # https://developer.paypal.com/docs/api/subscriptions/v1/#subscriptions
+  # https://developer.paypal.com/docs/api/subscriptions/v1/#definition-subscription
   class Subscription < RequestBase
 
     def self.path(resource_id = nil)
@@ -52,16 +53,44 @@ module PayPal::SDK::Subscriptions
       object_of :cancel_url, String
     end
 
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#definition-cycle_execution
+    class CycleExecution < Base
+      object_of :tenure_type, String # REGULAR|TRIAL
+      object_of :sequence, Integer
+      object_of :cycles_completed, Integer
+      object_of :cycles_remaining, Integer
+      object_of :current_pricing_scheme_version, Integer
+      object_of :total_cycles, Integer
+    end
+
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#definition-last_payment_details
+    class LastPaymentDetails < Base
+      object_of :amount, Money
+      object_of :time, DateTime
+    end
+
+    # https://developer.paypal.com/docs/api/subscriptions/v1/#definition-subscription_billing_info
+    class SubscriptionBillingInfo < Base
+      object_of :outstanding_balance, Money
+      array_of :cycle_executions, CycleExecution
+      object_of :last_payment, LastPaymentDetails
+      object_of :next_billing_time, DateTime
+      object_of :final_payment_time, DateTime
+      object_of :failed_payments_count, Integer
+    end
+
     object_of :plan_id, String
     object_of :id, String
     object_of :start_time, DateTime # default: Time.now
     object_of :status, String # APPROVAL_PENDING|APPROVED|ACTIVE|SUSPENDED|CANCELLED|EXPIRED
+    object_of :status_change_note, String
     object_of :status_update_time, DateTime
     object_of :quantity, Integer
     object_of :shipping_amount, Money
     object_of :subscriber, Subscriber
     object_of :auto_renewal, Boolean
     object_of :application_context, ApplicationContext
+    object_of :billing_info, SubscriptionBillingInfo
     object_of :create_time, DateTime
     array_of  :links, Link
 
