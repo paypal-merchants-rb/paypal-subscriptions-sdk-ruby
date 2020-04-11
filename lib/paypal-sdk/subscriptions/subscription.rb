@@ -33,6 +33,7 @@ module PayPal::SDK::Subscriptions
 
       object_of :name, SubscriberName
       object_of :email_address, String
+      object_of :payer_id, String
       object_of :shipping_address, ShippingAddress
     end
 
