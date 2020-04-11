@@ -34,6 +34,7 @@ module PayPal::SDK::Subscriptions
       object_of :name, SubscriberName
       object_of :email_address, String
       object_of :shipping_address, ShippingAddress
+      object_of :payer_id, String
     end
 
     # https://developer.paypal.com/docs/api/subscriptions/v1/#definition-application_context
