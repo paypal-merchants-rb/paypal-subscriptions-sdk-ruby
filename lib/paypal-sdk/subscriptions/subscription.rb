@@ -95,13 +95,21 @@ module PayPal::SDK::Subscriptions
     object_of :create_time, DateTime
     array_of  :links, Link
 
-    def activate
-      commit("#{path(id)}/activate")
+    def activate(note=nil)
+      if note
+        commit("#{path(id)}/activate", reason: note)
+      else
+        commit("#{path(id)}/activate")
+      end
     end
     raise_on_api_error :activate
 
-    def cancel
-      commit("#{path(id)}/cancel")
+    def cancel(note=nil)
+      if note
+        commit("#{path(id)}/cancel", reason: note)
+      else
+        commit("#{path(id)}/cancel")
+      end
     end
     raise_on_api_error :cancel
 
@@ -118,8 +126,12 @@ module PayPal::SDK::Subscriptions
     end
     raise_on_api_error :capture
 
-    def suspend(note)
-      commit("#{path(id)}/suspend", reason: note)
+    def suspend(note=nil)
+      if note
+        commit("#{path(id)}/suspend", reason: note)
+      else
+        commit("#{path(id)}/suspend")
+      end
     end
     raise_on_api_error :suspend
 
