@@ -1,7 +1,7 @@
 # PayPal REST SDK for Subscriptions Management
 
 [![Version         ][rubygems_badge]][rubygems]
-[![Travis CI       ][travis_badge]][travis]
+[![Github Actions  ][actions_badge]][actions]
 
 Missing PayPal REST SDK for [Subscriptions Management][subscriptions_full_integration] as [released April 2019][release_notes].
 
@@ -76,8 +76,8 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 [rubygems_badge]: http://img.shields.io/gem/v/paypal-sdk-subscriptions.svg
 [rubygems]: https://rubygems.org/gems/paypal-sdk-subscriptions
-[travis_badge]: http://img.shields.io/travis/varyonic/paypal-subscriptions-sdk-ruby/master.svg
-[travis]: https://travis-ci.org/varyonic/paypal-subscriptions-sdk-ruby
+[actions_badge]: https://github.com/paypal-merchants-rb/paypal-subscriptions-sdk-ruby/workflows/ci/badge.svg
+[actions]: https://github.com/paypal-merchants-rb/paypal-subscriptions-sdk-ruby/actions
 
 [release_notes]: https://developer.paypal.com/docs/release-notes/release-notes-2019/#april
 [subscriptions_full_integration]: https://developer.paypal.com/docs/subscriptions/full-integration/subscription-management/
