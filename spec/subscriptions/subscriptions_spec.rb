@@ -28,12 +28,12 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
       ],
       "payment_preferences" => {
         "service_type" => "PREPAID",
-        "auto_bill_outstanding" => true,
+        "auto_bill_outstanding" => 'true',
         "setup_fee" => { "value" => "10", "currency_code" => "USD" },
         "setup_fee_failure_action" => "CONTINUE",
         "payment_failure_threshold" => 3
       },
-      "quantity_supported" => true,
+      "quantity_supported" => 'true',
       "taxes" => { "percentage" => "10", "inclusive" => false }
     }
   end
@@ -68,7 +68,7 @@ RSpec.describe PayPal::SDK::Subscriptions::Subscription do
         }
       }
     },
-    "auto_renewal" => true,
+    "auto_renewal" => 'true',
     "application_context" => {
       "brand_name" => "example",
       "locale" => "en-US",
